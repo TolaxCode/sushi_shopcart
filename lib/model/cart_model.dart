@@ -7,23 +7,19 @@ class Cart extends ChangeNotifier {
   //get cartProduct
   List<Products> get cartProducts => _cartProducts;
   //add products to cart
-  void addToCart(Products products, int qty) {
+  void addToCart(Products products) {
     _cartProducts.add(products);
     notifyListeners();
   }
 
-  dynamic qty = 1;
   //remove products from cart
   void removeToCart(Products products) {
-    for (int i = 0; i < qty; i++) {
-      _cartProducts.remove(products);
-    }
-
+    _cartProducts.remove(products);
     notifyListeners();
   }
 
   //calculat price
-  totalPrice() {
+  double totalPrice() {
     double total = 0;
     for (int i = 0; i < cartProducts.length; i++) {
       total += cartProducts[i].price;

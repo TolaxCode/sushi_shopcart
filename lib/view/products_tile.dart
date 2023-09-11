@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sushi_ui/constants/fonts.dart';
+import 'package:sushi_ui/constants/route_screen.dart';
 import 'package:sushi_ui/model/prouduct_model.dart';
 import 'package:sushi_ui/view/detail_page.dart';
 
@@ -19,14 +20,10 @@ class ProductsTile extends StatelessWidget {
         children: [
           //on tap
           GestureDetector(
-            onTap: () => Navigator.push(
+            onTap: () => nextScreen(
               context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return DetailPage(
-                    products: eachProducts,
-                  );
-                },
+              DetailPage(
+                products: eachProducts,
               ),
             ),
             //image

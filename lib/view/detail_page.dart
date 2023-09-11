@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sushi_ui/constants/fonts.dart';
+import 'package:sushi_ui/constants/route_screen.dart';
 import 'package:sushi_ui/model/cart_model.dart';
 import 'package:sushi_ui/model/prouduct_model.dart';
 import 'package:sushi_ui/view/cart_page.dart';
@@ -15,7 +16,7 @@ class DetailPage extends StatefulWidget {
   State<DetailPage> createState() => _DetailPageState();
 }
 
-dynamic qty = 1;
+int qty = 1;
 
 class _DetailPageState extends State<DetailPage> {
   void addQty() {
@@ -26,9 +27,7 @@ class _DetailPageState extends State<DetailPage> {
 
   void removeQty() {
     setState(() {
-      if (qty > 1) {
-        qty--;
-      }
+      qty > 1 ? qty-- : 0;
     });
   }
 
@@ -36,33 +35,17 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     //add product to cart
     void addProductsToCart(Products products) {
-      Provider.of<Cart>(context, listen: false).addToCart(products, qty);
+      Provider.of<Cart>(context, listen: false).addToCart(products);
       //alert dialog
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.teal[700],
-            title: Text(
-              'Added Sucessfully',
-              style: fontsButton,
-            ),
-            icon: const Icon(
-              Icons.check,
-              size: 30,
-              color: Colors.white,
-            ),
-          );
-        },
-      );
+      showMessage(context, 'Added Sucessfully');
     }
 
     return Consumer<Cart>(
       builder: (context, value, child) {
         return Scaffold(
-          backgroundColor: Colors.grey[400],
+          backgroundColor: Colors.grey[200],
           appBar: AppBar(
-            backgroundColor: Colors.grey[400],
+            backgroundColor: Colors.grey[200],
             centerTitle: true,
             title: Text(
               'Detail',
@@ -70,21 +53,27 @@ class _DetailPageState extends State<DetailPage> {
             ),
             //cart page
             actions: [
-              IconButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CartPage(),
-                  ),
+              GestureDetector(
+                onTap: () => nextScreen(context, const CartPage()),
+                child: Container(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: value.cartProducts.isEmpty
+                      ? const Icon(Icons.shopping_cart_checkout)
+                      : Badge(
+                        
+                          label: Text(value.cartProducts.length.toString()),
+                          offset: const Offset(8, -7),
+                          child: const Icon(Icons.shopping_cart_checkout),
+                        ),
                 ),
-                icon: const Icon(Icons.shopping_cart_checkout_rounded),
-              )
+              ),
             ],
           ),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
+                vertical: 10,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +126,7 @@ class _DetailPageState extends State<DetailPage> {
                   ),
 
                   Text(
-                    'Sushi is a popular food in the world that from Japan.Japan people\'s is always eats this sushi every day and it is a culture of Japan',
+                    'Sushi is a popular food in the world that from Japan.Japan people\'s is always eats this sushi every day and it is a culture of Japan.It is very good for healty and younger than old.',
                     style: fontsWeigth,
                   )
                 ],
@@ -173,12 +162,11 @@ class _DetailPageState extends State<DetailPage> {
                         qty.toString(),
                         style: fontsQty,
                       ),
+
                       //add
                       IconButton.outlined(
                         color: Colors.white,
-                        onPressed: () {
-                          addQty();
-                        },
+                        onPressed: () => addQty(),
                         icon: const Icon(
                           Icons.add,
                           color: Colors.white,
